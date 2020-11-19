@@ -105,3 +105,6 @@ dist
 
 # History
 .history/
+
+google-services.json
+src/firebase/config.js
