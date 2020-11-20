@@ -31,11 +31,11 @@ function HomeStackScreen({ user }: any) {
 function SettingsScreen({ navigation }: any) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings screen</Text>
-      <Button
+      <Text>Tela de configurações</Text>
+      {/* <Button
         title="Go to Details"
         onPress={() => navigation.navigate('Details')}
-      />
+      /> */}
     </View>
   );
 }
@@ -52,7 +52,7 @@ const SettingsStack = createStackNavigator();
 function SettingsStackScreen() {
   return (
     <SettingsStack.Navigator>
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
+      <SettingsStack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Configurações' }} />
       <SettingsStack.Screen name="Details" component={DetailsScreen} />
     </SettingsStack.Navigator>
   );
