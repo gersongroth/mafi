@@ -16,7 +16,7 @@ export default function RegistrationScreen({navigation}) {
 
     const onRegisterPress = () => {
         if (password !== confirmPassword) {
-            alert("Passwords don't match.")
+            alert("Senhas não são iguais.")
             return
         }
         firebase
@@ -56,7 +56,7 @@ export default function RegistrationScreen({navigation}) {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder='Full Name'
+                    placeholder='Nome completo'
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setFullName(text)}
                     value={fullName}
@@ -76,7 +76,7 @@ export default function RegistrationScreen({navigation}) {
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Password'
+                    placeholder='Senha'
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
@@ -86,7 +86,7 @@ export default function RegistrationScreen({navigation}) {
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Confirm Password'
+                    placeholder='Confirmar Senha'
                     onChangeText={(text) => setConfirmPassword(text)}
                     value={confirmPassword}
                     underlineColorAndroid="transparent"
@@ -95,10 +95,10 @@ export default function RegistrationScreen({navigation}) {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => onRegisterPress()}>
-                    <Text style={styles.buttonTitle}>Create account</Text>
+                    <Text style={styles.buttonTitle}>Criar conta</Text>
                 </TouchableOpacity>
                 <View style={styles.footerView}>
-                    <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
+                    <Text style={styles.footerText}>Já possui uma conta? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Entrar</Text></Text>
                 </View>
             </KeyboardAwareScrollView>
         </View>
