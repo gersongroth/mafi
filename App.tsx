@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginScreen, HomeScreen, RegistrationScreen, YoutubeScreen } from './src/screens';
+import { LoginScreen, HomeScreen, RegistrationScreen, VideoScreen } from './src/screens';
 import {decode, encode} from 'base-64';
 import { firebase } from './src/firebase/config';
 import { LogBox, View, Text, Button } from 'react-native';
@@ -59,12 +59,12 @@ function SettingsStackScreen() {
 }
 
 
-const YoutubeStack = createStackNavigator();
-function YoutubeStackScreen() {
+const VideoStack = createStackNavigator();
+function VideoStackScreen() {
   return (
-    <YoutubeStack.Navigator>
-      <YoutubeStack.Screen name="Youtube" options={{ title: 'Youtube' }} component={YoutubeScreen} />
-    </YoutubeStack.Navigator>
+    <VideoStack.Navigator>
+      <VideoStack.Screen name="Video" options={{ title: 'Vídeo' }} component={VideoScreen} />
+    </VideoStack.Navigator>
   );
 }
 
@@ -115,8 +115,8 @@ export default function App() {
                       ? 'ios-list-box'
                       : 'ios-list';
                       return <Ionicons name={iconName} size={size} color={color} />
-                    } else if (route.name === 'Youtube') {
-                      return <FontAwesome5 name="youtube" size={size} color={color} />
+                    } else if (route.name === 'Video') {
+                      return <FontAwesome5 name="video" size={size} color={color} />
                     }
 
                     return <Ionicons name="ios-home" size={size} color={color} />
@@ -129,7 +129,7 @@ export default function App() {
                 }}
               >
                 <Tab.Screen name="Home" children={()=><HomeStackScreen user={user}/>} />
-                <Tab.Screen name="Youtube" component={YoutubeStackScreen} />
+                <Tab.Screen name="Video" component={VideoStackScreen} />
                 <Tab.Screen name="Settings" component={SettingsStackScreen} />
               </Tab.Navigator>
             ) : (

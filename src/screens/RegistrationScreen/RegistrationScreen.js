@@ -51,8 +51,8 @@ export default function RegistrationScreen({navigation}) {
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 <Image
-                    style={styles.logo}
-                    source={require('../../../assets/icon.png')}
+                    style={styles.logoCoruja}
+                    source={require('../../../assets/icon-coruja.png')}
                 />
                 <TextInput
                     style={styles.input}

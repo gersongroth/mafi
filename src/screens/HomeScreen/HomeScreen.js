@@ -8,13 +8,13 @@ export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState('')
     const [entities, setEntities] = useState([])
 
-    const entityRef = firebase.firestore().collection('entities')
+    const entityRef = firebase.firestore().collection('posts')
     const userID = props.extraData.id
 
     useEffect(() => {
         entityRef
-            .where("authorID", "==", userID)
             .orderBy('createdAt', 'desc')
+            .limit(100)
             .onSnapshot(
                 querySnapshot => {
                     const newEntities = []
@@ -55,7 +55,7 @@ export default function HomeScreen(props) {
         return (
             <View style={styles.entityContainer}>
                 <Text style={styles.entityText}>
-                    {index}. {item.text}
+                    {index + 1}. {item.url}
                 </Text>
             </View>
         )
@@ -63,20 +63,6 @@ export default function HomeScreen(props) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.formContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Add new entity'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEntityText(text)}
-                    value={entityText}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
-                    <Text style={styles.buttonText}>Add</Text>
-                </TouchableOpacity>
-            </View>
             { entities && (
                 <View style={styles.listContainer}>
                     <FlatList

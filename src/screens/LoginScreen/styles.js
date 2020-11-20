@@ -11,7 +11,14 @@ export default StyleSheet.create({
     logo: {
         flex: 1,
         height: 120,
-        width: 90,
+        width: 120,
+        alignSelf: "center",
+        margin: 30
+    },
+    logoCoruja: {
+        flex: 1,
+        height: 120,
+        width: 135,
         alignSelf: "center",
         margin: 30
     },

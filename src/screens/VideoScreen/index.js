@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import styles from './styles';
 import { firebase } from '../../firebase/config'
+import styles from './styles';
 
-export default function YoutubeScreen(props) {
+export default function VideoScreen(props) {
 
-    const [entityText, setEntityText] = useState('')
+    const [urlYoutube, setUrlYoutube] = useState('')
     const [entities, setEntities] = useState([])
-
-    const entityRef = firebase.firestore().collection('entities')
+    const postsRef = firebase.firestore().collection('posts')
     const userID = '1213';
 
     useEffect(() => {
-        entityRef
+        postsRef
             .where("authorID", "==", userID)
+            .where('type', '==', 'youtube')
             .orderBy('createdAt', 'desc')
+            .limit(100)
             .onSnapshot(
                 querySnapshot => {
                     const newEntities = []
@@ -24,6 +25,7 @@ export default function YoutubeScreen(props) {
                         newEntities.push(entity)
                     });
                     setEntities(newEntities)
+                    console.log(newEntities)
                 },
                 error => {
                     console.log(error)
@@ -32,17 +34,18 @@ export default function YoutubeScreen(props) {
     }, [])
 
     const onAddButtonPress = () => {
-        if (entityText && entityText.length > 0) {
+        if (urlYoutube && urlYoutube.length > 0) {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
             const data = {
-                text: entityText,
+                type: 'youtube',
+                url: urlYoutube,
                 authorID: userID,
                 createdAt: timestamp,
             };
-            entityRef
+            postsRef
                 .add(data)
                 .then(_doc => {
-                    setEntityText('')
+                    setUrlYoutube('')
                     Keyboard.dismiss()
                 })
                 .catch((error) => {
@@ -51,11 +54,11 @@ export default function YoutubeScreen(props) {
         }
     }
 
-    const renderEntity = ({item, index}) => {
+    const renderVideo = ({item, index}) => {
         return (
             <View style={styles.entityContainer}>
-                <Text style={styles.entityText}>
-                    {index}. {item.text}
+                <Text style={styles.urlYoutube}>
+                    {item.url}
                 </Text>
             </View>
         )
@@ -68,8 +71,8 @@ export default function YoutubeScreen(props) {
                     style={styles.input}
                     placeholder='Adicionar novo vídeo'
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEntityText(text)}
-                    value={entityText}
+                    onChangeText={(text) => setUrlYoutube(text)}
+                    value={urlYoutube}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
                 />
@@ -77,15 +80,31 @@ export default function YoutubeScreen(props) {
                     <Text style={styles.buttonText}>Adicionar</Text>
                 </TouchableOpacity>
             </View>
-            { entities && (
-                <View style={styles.listContainer}>
-                    <FlatList
-                        data={entities}
-                        renderItem={renderEntity}
-                        keyExtractor={(item) => item.id}
-                        removeClippedSubviews={true}
-                    />
-                </View>
+            { entities.length > 0 ? (
+                <>
+                    <Text>Seus vídeos adicionados</Text>
+                    <View style={styles.listContainer}>
+                        <FlatList
+                            data={entities}
+                            renderItem={renderVideo}
+                            keyExtractor={(item) => item.id}
+                            removeClippedSubviews={true}
+                        />
+                    </View>
+                </>
+            ) : (
+                // TODO - ajustar layout para nao precisar renderizar a flatlist
+                <>
+                    <Text>Você não adicionou nenhum vídeo.</Text>
+                    <View style={styles.listContainer} >
+                        <FlatList
+                            data={[]}
+                            renderItem={renderVideo}
+                            keyExtractor={(item) => item.id}
+                            removeClippedSubviews={true}
+                        />
+                    </View>
+                </>
             )}
         </View>
     )

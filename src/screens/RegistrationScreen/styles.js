@@ -15,6 +15,13 @@ export default StyleSheet.create({
         alignSelf: "center",
         margin: 30
     },
+    logoCoruja: {
+        flex: 1,
+        height: 120,
+        width: 135,
+        alignSelf: "center",
+        margin: 30
+    },
     input: {
         height: 48,
         borderRadius: 5,
