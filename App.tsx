@@ -8,6 +8,8 @@ import { firebase } from './src/firebase/config';
 import { LogBox, View, Text, Button } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons,FontAwesome5 } from '@expo/vector-icons';
+import { useStores } from './src/hooks/useStores';
+// import { Observer } from 'mobx-react-lite';
 
 LogBox.ignoreLogs(['Setting a timer']);
 
@@ -71,13 +73,13 @@ function VideoStackScreen() {
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-
+  const { ProfileStore } = useStores();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null)
 
   useEffect(() => {
     const usersRef = firebase.firestore().collection('users');
-    console.log(usersRef);
+
     firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
       console.log(user);
       if (user) {
@@ -88,6 +90,8 @@ export default function App() {
             const userData = document.data()
             console.log(userData);
             setUser(userData)
+
+            ProfileStore.setUser(userData);
 
             setLoading(false)
           })
@@ -101,45 +105,49 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      {loading ? <></> : (
-        <NavigationContainer>
-            { user ? (
-              <Tab.Navigator
-                screenOptions={({ route }) => ({
-                  tabBarIcon: ({ focused, color, size }) => {
-                    if (route.name === 'Home') {
-                      return <Ionicons name="ios-home" size={size} color={color} />
-                    } else if (route.name === 'Settings') {
-                      const iconName = focused
-                      ? 'ios-list-box'
-                      : 'ios-list';
-                      return <Ionicons name={iconName} size={size} color={color} />
-                    } else if (route.name === 'Video') {
-                      return <FontAwesome5 name="video" size={size} color={color} />
-                    }
-
-                    return <Ionicons name="ios-home" size={size} color={color} />
-                  },
-                })}
-                tabBarOptions={{
-                  activeTintColor: 'tomato',
-                  inactiveTintColor: 'gray',
-                  showLabel: false,
-                }}
-              >
-                <Tab.Screen name="Home" children={()=><HomeStackScreen user={user}/>} />
-                <Tab.Screen name="Video" component={VideoStackScreen} />
-                <Tab.Screen name="Settings" component={SettingsStackScreen} />
-              </Tab.Navigator>
-            ) : (
-              <Stack.Navigator>
-                <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
-                <Stack.Screen name="Registration" component={RegistrationScreen} options={{ title: 'Cadastro' }} />
-              </Stack.Navigator>
+    // <Observer>
+    //     {() => (
+           <>
+            {loading ? <></> : (
+              <NavigationContainer>
+                  { user ? (
+                    <Tab.Navigator
+                      screenOptions={({ route }) => ({
+                        tabBarIcon: ({ focused, color, size }) => {
+                          if (route.name === 'Home') {
+                            return <Ionicons name="ios-home" size={size} color={color} />
+                          } else if (route.name === 'Settings') {
+                            const iconName = focused
+                            ? 'ios-list-box'
+                            : 'ios-list';
+                            return <Ionicons name={iconName} size={size} color={color} />
+                          } else if (route.name === 'Video') {
+                            return <FontAwesome5 name="video" size={size} color={color} />
+                          }
+      
+                          return <Ionicons name="ios-home" size={size} color={color} />
+                        },
+                      })}
+                      tabBarOptions={{
+                        activeTintColor: 'tomato',
+                        inactiveTintColor: 'gray',
+                        showLabel: false,
+                      }}
+                    >
+                      <Tab.Screen name="Home" children={()=><HomeStackScreen user={user}/>} />
+                      <Tab.Screen name="Video" component={VideoStackScreen} />
+                      <Tab.Screen name="Settings" component={SettingsStackScreen} />
+                    </Tab.Navigator>
+                  ) : (
+                    <Stack.Navigator>
+                      <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
+                      <Stack.Screen name="Registration" component={RegistrationScreen} options={{ title: 'Cadastro' }} />
+                    </Stack.Navigator>
+                  )}
+              </NavigationContainer>
             )}
-        </NavigationContainer>
-      )}
-    </>
+          </>
+      //   )}
+      // </Observer>
   );
 }

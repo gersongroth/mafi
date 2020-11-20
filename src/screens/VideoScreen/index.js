@@ -1,18 +1,19 @@
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { firebase } from '../../firebase/config'
+import { useStores } from '../../hooks/useStores';
 import styles from './styles';
 
-export default function VideoScreen(props) {
-
+const VideoScreen = observer((props) => {
+    const { ProfileStore } = useStores();
     const [urlYoutube, setUrlYoutube] = useState('')
     const [entities, setEntities] = useState([])
     const postsRef = firebase.firestore().collection('posts')
-    const userID = '1213';
 
     useEffect(() => {
         postsRef
-            .where("authorID", "==", userID)
+            .where("authorID", "==", ProfileStore.user?.id)
             .where('type', '==', 'youtube')
             .orderBy('createdAt', 'desc')
             .limit(100)
@@ -25,13 +26,12 @@ export default function VideoScreen(props) {
                         newEntities.push(entity)
                     });
                     setEntities(newEntities)
-                    console.log(newEntities)
                 },
                 error => {
                     console.log(error)
                 }
             )
-    }, [])
+    }, [ProfileStore, ProfileStore.user])
 
     const onAddButtonPress = () => {
         if (urlYoutube && urlYoutube.length > 0) {
@@ -39,7 +39,7 @@ export default function VideoScreen(props) {
             const data = {
                 type: 'youtube',
                 url: urlYoutube,
-                authorID: userID,
+                authorID: ProfileStore.user?.id,
                 createdAt: timestamp,
             };
             postsRef
@@ -108,4 +108,6 @@ export default function VideoScreen(props) {
             )}
         </View>
     )
-}
+});
+
+export default VideoScreen;

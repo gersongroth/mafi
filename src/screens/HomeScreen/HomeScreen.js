@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from './styles';
 import { firebase } from '../../firebase/config'
+import { useStores } from '../../hooks/useStores';
 
-export default function HomeScreen(props) {
-
+export default function HomeScreen() {
+    const { ProfileStore } = useStores();
     const [entityText, setEntityText] = useState('')
     const [entities, setEntities] = useState([])
 
     const entityRef = firebase.firestore().collection('posts')
-    const userID = props.extraData.id
 
     useEffect(() => {
         entityRef
@@ -36,7 +36,7 @@ export default function HomeScreen(props) {
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
             const data = {
                 text: entityText,
-                authorID: userID,
+                authorID: ProfileStore.user.id,
                 createdAt: timestamp,
             };
             entityRef

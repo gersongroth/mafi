@@ -3,8 +3,10 @@ import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import styles from './styles';
 import { firebase } from '../../firebase/config'
+// import { useStores } from '../../hooks/useStores';
 
 export default function LoginScreen({navigation}) {
+    // const [ ProfileStore ] = useStores();
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -28,6 +30,9 @@ export default function LoginScreen({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
+
+                        // ProfileStore.setUser(user);
+
                         navigation.navigate('Home', {user})
                     })
                     .catch(error => {
@@ -52,7 +57,7 @@ export default function LoginScreen({navigation}) {
                     style={styles.input}
                     placeholder='E-mail'
                     placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setEmail(text)}
+                    onChangeText={(text) => setEmail((text || '').trim())}
                     value={email}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
