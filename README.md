@@ -1,4 +1,4 @@
-# matphys
+# mafi
 
 Adicionar informações no src/firebase/config.js
 
