@@ -7,13 +7,14 @@ import { apiEvents } from '../../../event/descriptor/ApiEvents';
 
 const AddVideo = ({navigation}: any) => {
     const { PostStore } = useStores();
-    const [urlYoutube, setUrlYoutube] = useState('')
-    const [description, setDescription] = useState('')
+    const [urlYoutube, setUrlYoutube] = useState('');
+    const [description, setDescription] = useState('');
 
     const onAddButtonPress = () => {
         if (urlYoutube && urlYoutube.length > 0) {
             apiEvents.addPost.subscribe(() => {
                 setUrlYoutube('');
+                setDescription('');
                 Keyboard.dismiss();
             }, true);
             PostStore.addYoutubeVideo({

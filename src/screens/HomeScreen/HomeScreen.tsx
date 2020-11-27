@@ -8,6 +8,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import UserAvatar from 'react-native-user-avatar';
 import { observer } from 'mobx-react-lite';
 
+export const anonymousUser = {
+    fullName: 'Anônimo',
+    nickname: 'Anônimo'
+};
+
 const HomeScreen = observer(() => {
     const { ProfileStore } = useStores();
     const [entityText, setEntityText] = useState('')
@@ -48,17 +53,8 @@ const HomeScreen = observer(() => {
             )
     }, []);
 
-    const renderUserOwner = (userId: string) => {
-        let user = ProfileStore.users[userId];
-        if (!user) {
-            ProfileStore.loadUser(userId);
-            user = {
-                fullName: 'Anônimo',
-                nickname: 'Anônimo'
-            };
-        }
-
-        console.log('jdskfjsljfslkd', user);
+    const renderUserOwner = (post: any) => {
+        const user = post.author || anonymousUser;
 
         return (
             <>
@@ -77,7 +73,7 @@ const HomeScreen = observer(() => {
                     <View style={{ width: '100%'}}>
                         <Text>{entity.youtubeId}</Text>
                         <View style={styles.videoOwner}>
-                            {renderUserOwner(entity.authorID)}
+                            {renderUserOwner(entity)}
                         </View>
                         <YoutubePlayer
                             height={300}

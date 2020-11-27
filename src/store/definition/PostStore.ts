@@ -1,12 +1,8 @@
 import firebase from 'firebase';
 import { action, makeAutoObservable } from 'mobx';
 import { apiEvents } from '../../event/descriptor/ApiEvents';
-import { AbstractStore } from '../../hooks/abstractSTore';
+import { AbstractStore } from '../../hooks/useStores';
 import { YoutubePost } from '../../types';
-
-interface Profile {
-
-}
 
 class PostStore {
     postsRef = firebase.firestore().collection('posts');
@@ -43,10 +39,16 @@ class PostStore {
 
     addYoutubeVideo(youtubePost: YoutubePost) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const user = AbstractStore.ProfileStore.user;
         const data = {
             type: 'youtube',
-            authorID: AbstractStore.ProfileStore.user?.id,
+            authorID: user?.id,
             createdAt: timestamp,
+            author: {
+                nickname: user?.nickname,
+                fullName: user?.fullName,
+                id: user?.id,
+            },
             ...youtubePost,
         };
         this.postsRef
