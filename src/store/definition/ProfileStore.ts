@@ -1,9 +1,6 @@
 import firebase from 'firebase';
 import { action, makeAutoObservable } from 'mobx';
-
-interface Profile {
-
-}
+import { Profile } from '../../types';
 
 class ProfileStore {
     user: Profile | undefined;
@@ -19,7 +16,8 @@ class ProfileStore {
         this.user = user;
     }
 
-    loadUser = (userId: string) => { 
+    loadUser = (userId: string) => {
+        console.log('load user');
         if (!this.users[userId]) {
             this.entityRef.doc(userId).get().then((user: any) => {
                 this.users[userId] = user;

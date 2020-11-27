@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { firebase } from '../../firebase/config'
 import { useStores } from '../../hooks/useStores';
+import AddVideo from './AddVideo';
 import styles from './styles';
 
 const VideoScreen = observer((props) => {
@@ -33,26 +34,7 @@ const VideoScreen = observer((props) => {
             )
     }, [ProfileStore, ProfileStore.user])
 
-    const onAddButtonPress = () => {
-        if (urlYoutube && urlYoutube.length > 0) {
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            const data = {
-                type: 'youtube',
-                url: urlYoutube,
-                authorID: ProfileStore.user?.id,
-                createdAt: timestamp,
-            };
-            postsRef
-                .add(data)
-                .then(_doc => {
-                    setUrlYoutube('')
-                    Keyboard.dismiss()
-                })
-                .catch((error) => {
-                    alert(error)
-                });
-        }
-    }
+    
 
     const renderVideo = ({item, index}) => {
         return (
@@ -65,47 +47,50 @@ const VideoScreen = observer((props) => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.formContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Adicionar novo vídeo'
-                    placeholderTextColor="#aaaaaa"
-                    onChangeText={(text) => setUrlYoutube(text)}
-                    value={urlYoutube}
-                    underlineColorAndroid="transparent"
-                    autoCapitalize="none"
-                />
-                <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
-                    <Text style={styles.buttonText}>Adicionar</Text>
-                </TouchableOpacity>
-            </View>
-            { entities.length > 0 ? (
-                <>
-                    <Text>Seus vídeos adicionados</Text>
-                    <View style={styles.listContainer}>
-                        <FlatList
-                            data={entities}
-                            renderItem={renderVideo}
-                            keyExtractor={(item) => item.id}
-                            removeClippedSubviews={true}
-                        />
-                    </View>
-                </>
-            ) : (
-                // TODO - ajustar layout para nao precisar renderizar a flatlist
-                <>
-                    <Text>Você não adicionou nenhum vídeo.</Text>
-                    <View style={styles.listContainer} >
-                        <FlatList
-                            data={[]}
-                            renderItem={renderVideo}
-                            keyExtractor={(item) => item.id}
-                            removeClippedSubviews={true}
-                        />
-                    </View>
-                </>
-            )}
+        <View>
+            <AddVideo />
+            {/* <View style={styles.container}>
+                <View style={styles.formContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder='Adicionar novo vídeo'
+                        placeholderTextColor="#aaaaaa"
+                        onChangeText={(text) => setUrlYoutube(text)}
+                        value={urlYoutube}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                    />
+                    <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
+                        <Text style={styles.buttonText}>Adicionar</Text>
+                    </TouchableOpacity>
+                </View>
+                { entities.length > 0 ? (
+                    <>
+                        <Text>Seus vídeos adicionados</Text>
+                        <View style={styles.listContainer}>
+                            <FlatList
+                                data={entities}
+                                renderItem={renderVideo}
+                                keyExtractor={(item) => item.id}
+                                removeClippedSubviews={true}
+                            />
+                        </View>
+                    </>
+                ) : (
+                    // TODO - ajustar layout para nao precisar renderizar a flatlist
+                    <>
+                        <Text>Você não adicionou nenhum vídeo.</Text>
+                        <View style={styles.listContainer} >
+                            <FlatList
+                                data={[]}
+                                renderItem={renderVideo}
+                                keyExtractor={(item) => item.id}
+                                removeClippedSubviews={true}
+                            />
+                        </View>
+                    </>
+                )}
+            </View> */}
         </View>
     )
 });

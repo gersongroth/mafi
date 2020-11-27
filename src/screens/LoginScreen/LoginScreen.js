@@ -50,8 +50,8 @@ export default function LoginScreen({navigation}) {
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 <Image
-                    style={styles.logoCoruja}
-                    source={require('../../../assets/icon-coruja.png')}
+                    style={styles.logo}
+                    source={require('../../../assets/icon.png')}
                 />
                 <TextInput
                     style={styles.input}

@@ -28,6 +28,7 @@ export default function RegistrationScreen({navigation}) {
                     id: uid,
                     email,
                     fullName,
+                    nickname: email.split('@')[0],
                 };
                 const usersRef = firebase.firestore().collection('users')
                 usersRef

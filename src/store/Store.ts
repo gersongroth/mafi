@@ -1,5 +1,6 @@
 import { configure } from 'mobx';
 import { createContext } from 'react';
+import PostStore from './definition/PostStore';
 import ProfileStore from './definition/ProfileStore';
 
 configure({
@@ -10,6 +11,7 @@ configure({
 });
 class RootStore {
     ProfileStore = new ProfileStore();
+    PostStore = new PostStore();
 }
 
 const StoreList = new RootStore();
