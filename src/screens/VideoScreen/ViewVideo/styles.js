@@ -6,13 +6,24 @@ export default StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         position: 'relative',
+        marginTop: 20,
+    },
+    title: {
+
+    },
+    logo: {
+        flex: 1,
+        height: 120,
+        width: 90,
+        alignSelf: "center",
+        margin: 30
     },
     youtube: {
         flex: 1,
-        height: 60,
-        width: 140,
+        height: 120,
+        width: 135,
         alignSelf: "center",
-        margin: 30,
+        margin: 30
     },
     input: {
         height: 48,

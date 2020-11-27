@@ -53,7 +53,7 @@ export default function RegistrationScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logoCoruja}
-                    source={require('../../../assets/icon-coruja.png')}
+                    source={require('../../../assets/icon.png')}
                 />
                 <TextInput
                     style={styles.input}

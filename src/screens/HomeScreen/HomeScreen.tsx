@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import UserAvatar from 'react-native-user-avatar';
 import { observer } from 'mobx-react-lite';
 import { format } from 'date-fns';
+import useInit from '../../hooks/useInit';
 
 export const anonymousUser = {
     fullName: 'Anônimo',
@@ -15,14 +16,10 @@ export const anonymousUser = {
 };
 
 const HomeScreen = observer(() => {
-    const { ProfileStore } = useStores();
-    const [entityText, setEntityText] = useState('')
-    const [entities, setEntities] = useState<any[]>([])
+    const { PostStore } = useStores();
     const [playing, setPlaying] = useState(false);
-    const [users, setUsers] = useState<any>({});
 
-    const entityRef = firebase.firestore().collection('posts')
-
+    useInit();
     const onStateChange = useCallback((state) => {
       if (state === "ended") {
         setPlaying(false);
@@ -33,26 +30,26 @@ const HomeScreen = observer(() => {
     const togglePlaying = useCallback(() => {
       setPlaying((prev) => !prev);
     }, []);
-    useEffect(() => {
-        entityRef
-            .orderBy('createdAt', 'desc')
-            .where('type', '==', 'youtube')
-            .limit(10)
-            .onSnapshot(
-                (querySnapshot: any[]) => {
-                    const newEntities: any[] | ((prevState: never[]) => never[]) = []
-                    querySnapshot.forEach((doc: { data: () => any; id: any; }) => {
-                        const entity = doc.data()
-                        entity.id = doc.id
-                        newEntities.push(entity)
-                    });
-                    setEntities(newEntities);
-                },
-                (error: any) => {
-                    console.log(error)
-                }
-            )
-    }, []);
+    // useEffect(() => {
+    //     entityRef
+    //         .orderBy('createdAt', 'desc')
+    //         .where('type', '==', 'youtube')
+    //         .limit(10)
+    //         .onSnapshot(
+    //             (querySnapshot: any[]) => {
+    //                 const newEntities: any[] | ((prevState: never[]) => never[]) = []
+    //                 querySnapshot.forEach((doc: { data: () => any; id: any; }) => {
+    //                     const entity = doc.data()
+    //                     entity.id = doc.id
+    //                     newEntities.push(entity)
+    //                 });
+    //                 setEntities(newEntities);
+    //             },
+    //             (error: any) => {
+    //                 console.log(error)
+    //             }
+    //         )
+    // }, []);
 
     const renderUserOwner = (post: any) => {
         const user = post.author || anonymousUser;
@@ -73,7 +70,7 @@ const HomeScreen = observer(() => {
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
-                { entities && entities.map((entity: any) => (
+                { PostStore.feedPosts && PostStore.feedPosts.map((entity: any) => (
                     <View style={{ width: '100%'}}>
                         <Text>{entity.youtubeId}</Text>
                         <View style={styles.videoOwner}>

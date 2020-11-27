@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import { action, makeAutoObservable } from 'mobx';
+import { AbstractStore } from '../../hooks/useStores';
 import { Profile } from '../../types';
 
 class ProfileStore {
@@ -13,7 +14,9 @@ class ProfileStore {
     }
 
     setUser(user: Profile) {
+        console.log('setuser', user);
         this.user = user;
+        AbstractStore.PostStore.loadUserPosts(user.id);
     }
 
     loadUser = (userId: string) => {

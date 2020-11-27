@@ -7,7 +7,8 @@ import { YoutubePost } from '../../types';
 class PostStore {
     postsRef = firebase.firestore().collection('posts');
 
-    feedPosts: any = {};
+    feedPosts: any = [];
+    userPosts: any = [];
 
     constructor() {
         makeAutoObservable(this);
@@ -36,6 +37,32 @@ class PostStore {
             )
     }
 
+    loadUserPosts(userId: string) {
+        this.postsRef
+            .orderBy('createdAt', 'desc')
+            .where('type', '==', 'youtube')
+            .where('authorID', '==', userId)
+            .onSnapshot(
+                (querySnapshot: any) => {
+                    const newEntities: any[] | ((prevState: never[]) => never[]) = []
+                    querySnapshot.forEach((doc: { data: () => any; id: any; }) => {
+                        const entity = doc.data()
+                        entity.id = doc.id
+                        newEntities.push(entity)
+                    });
+                    apiEvents.loadUserPosts.trigger(newEntities);
+
+                    this.setUserPosts(newEntities);
+                },
+                (error: any) => {
+                    console.log(error)
+                }
+            )
+    }
+
+    setUserPosts(posts: any[]) {
+        this.userPosts = posts;
+    }
 
     addYoutubeVideo(youtubePost: YoutubePost) {
         const timestamp = firebase.firestore.FieldValue.serverTimestamp();
