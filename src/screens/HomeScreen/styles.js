@@ -56,5 +56,14 @@ export default StyleSheet.create({
     videoOwner: {
         flex: 1,
         flexDirection: 'row',
-    }
+        marginBottom: 5,
+    },
+    authorAvatar: {
+        marginRight: 5,
+    },
+    postedAt: {
+        flex: 1,
+        alignItems: 'flex-end',
+        marginRight: 5,
+    },
 })

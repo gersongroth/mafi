@@ -7,6 +7,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import UserAvatar from 'react-native-user-avatar';
 import { observer } from 'mobx-react-lite';
+import { format } from 'date-fns';
 
 export const anonymousUser = {
     fullName: 'Anônimo',
@@ -58,8 +59,11 @@ const HomeScreen = observer(() => {
 
         return (
             <>
-                <UserAvatar size={20} name={user.fullName} style={{width: 20, height: 20}} />
-                <Text>{user.nickname}</Text>
+                <UserAvatar size={20} name={user.fullName} style={styles.authorAvatar} />
+                <Text style={styles.nickname}>{user.nickname}</Text>
+                <View style={styles.postedAt}>
+                    <Text style={styles.postedAtText}>{format(post.createdAt.toDate(), 'dd/MM/yyyy HH:mm:ss')}</Text>
+                </View>
             </>
         )
     }
