@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import { action, makeAutoObservable } from 'mobx';
 import { apiEvents } from '../../event/descriptor/ApiEvents';
 import { AbstractStore } from '../../hooks/useStores';
+import { getYoutubeId } from '../../services/PostService';
 import { YoutubePost } from '../../types';
 
 class PostStore {
@@ -76,6 +77,7 @@ class PostStore {
                 fullName: user?.fullName,
                 id: user?.id,
             },
+            youtubeId: getYoutubeId(youtubePost.url),
             ...youtubePost,
         };
         this.postsRef
@@ -86,6 +88,28 @@ class PostStore {
             .catch((error) => {
                 alert(error)
             });
+    }
+
+    like (postId: string, userId: string) {
+        this.postsRef.doc(postId)
+            .collection('likes')
+            .add({
+                userId,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+    }
+
+    removeLike (postId: string, userId: string) {
+        this.postsRef.doc(postId)
+            .collection('likes')
+            .where('userId', '==', userId)
+            .get()
+            .then((querySnapshot: any) => {
+                querySnapshot.forEach((doc: any) => {
+                    doc.ref.delete()
+                });
+            });
+        console.log('deslike');
     }
 }
 

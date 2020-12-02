@@ -19,6 +19,7 @@ const AddVideo = ({navigation}: any) => {
             }, true);
             PostStore.addYoutubeVideo({
                 url: urlYoutube,
+                description,
             });
         }
     }
@@ -39,6 +40,7 @@ const AddVideo = ({navigation}: any) => {
                     value={urlYoutube}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
+                    contextMenuHidden={false}
                 />
                 
                 <TextInput

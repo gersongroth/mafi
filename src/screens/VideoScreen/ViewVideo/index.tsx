@@ -13,8 +13,8 @@ const ViewVideo = observer(({navigation}: any) => {
     const renderVideo = ({item, index}: any) => {
         return (
             <View style={styles.entityContainer}>
-                <Text style={styles.urlYoutube}>
-                    {item.url}
+                <Text style={styles.youtubeDescription}>
+                    {item.description}
                 </Text>
             </View>
         )
@@ -23,31 +23,20 @@ const ViewVideo = observer(({navigation}: any) => {
     return (
         <View style={styles.container}>
             {(PostStore.userPosts || []).length > 0 ? (
-                    <>
-                        <Text>Seus vídeos adicionados</Text>
-                        <View style={styles.listContainer}>
-                            <FlatList
-                                data={PostStore.userPosts}
-                                renderItem={renderVideo}
-                                keyExtractor={(item: any) => item.id}
-                                removeClippedSubviews={true}
-                            />
-                        </View>
-                    </>
-                ) : (
-                    // TODO - ajustar layout para nao precisar renderizar a flatlist
-                    <>
-                        <Text>Você não adicionou nenhum vídeo.</Text>
-                        <View style={styles.listContainer} >
-                            <FlatList
-                                data={[]}
-                                renderItem={renderVideo}
-                                keyExtractor={(item) => item.id}
-                                removeClippedSubviews={true}
-                            />
-                        </View>
-                    </>
-                )}
+                <>
+                    <Text>Seus vídeos adicionados</Text>
+                    <View style={styles.listContainer}>
+                        <FlatList
+                            data={PostStore.userPosts}
+                            renderItem={renderVideo}
+                            keyExtractor={(item: any) => item.id}
+                            removeClippedSubviews={true}
+                        />
+                    </View>
+                </>
+            ) : (
+                <Text>Você não adicionou nenhum vídeo :(</Text>
+            )}
         </View>
     )
 });

@@ -3,7 +3,8 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 10,
     },
     formContainer: {
         flexDirection: 'row',
@@ -56,6 +57,8 @@ export default StyleSheet.create({
     videoOwner: {
         flex: 1,
         flexDirection: 'row',
+        margin: 10,
+        marginTop: 0,
         marginBottom: 5,
     },
     authorAvatar: {
@@ -65,5 +68,15 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
         marginRight: 5,
+    },
+    likesContainer: {
+        margin: 10,
+        marginBottom: 15,
+        marginTop: 0,
+        flex: 1,
+        flexDirection: 'row',
+    },
+    numberOfLikes: {
+        marginLeft: 10,
     },
 })

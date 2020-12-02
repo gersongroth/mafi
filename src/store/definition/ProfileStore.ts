@@ -14,7 +14,6 @@ class ProfileStore {
     }
 
     setUser(user: Profile) {
-        console.log('setuser', user);
         this.user = user;
         AbstractStore.PostStore.loadUserPosts(user.id);
     }

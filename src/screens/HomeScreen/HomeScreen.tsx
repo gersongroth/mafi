@@ -9,6 +9,7 @@ import UserAvatar from 'react-native-user-avatar';
 import { observer } from 'mobx-react-lite';
 import { format } from 'date-fns';
 import useInit from '../../hooks/useInit';
+import LikeView from './LikeView';
 
 export const anonymousUser = {
     fullName: 'Anônimo',
@@ -16,7 +17,7 @@ export const anonymousUser = {
 };
 
 const HomeScreen = observer(() => {
-    const { PostStore } = useStores();
+    const { PostStore, ProfileStore } = useStores();
     const [playing, setPlaying] = useState(false);
 
     useInit();
@@ -30,26 +31,6 @@ const HomeScreen = observer(() => {
     const togglePlaying = useCallback(() => {
       setPlaying((prev) => !prev);
     }, []);
-    // useEffect(() => {
-    //     entityRef
-    //         .orderBy('createdAt', 'desc')
-    //         .where('type', '==', 'youtube')
-    //         .limit(10)
-    //         .onSnapshot(
-    //             (querySnapshot: any[]) => {
-    //                 const newEntities: any[] | ((prevState: never[]) => never[]) = []
-    //                 querySnapshot.forEach((doc: { data: () => any; id: any; }) => {
-    //                     const entity = doc.data()
-    //                     entity.id = doc.id
-    //                     newEntities.push(entity)
-    //                 });
-    //                 setEntities(newEntities);
-    //             },
-    //             (error: any) => {
-    //                 console.log(error)
-    //             }
-    //         )
-    // }, []);
 
     const renderUserOwner = (post: any) => {
         const user = post.author || anonymousUser;
@@ -58,9 +39,11 @@ const HomeScreen = observer(() => {
             <>
                 <UserAvatar size={20} name={user.fullName} style={styles.authorAvatar} />
                 <Text style={styles.nickname}>{user.nickname}</Text>
-                <View style={styles.postedAt}>
-                    <Text style={styles.postedAtText}>{format(post.createdAt.toDate(), 'dd/MM/yyyy HH:mm:ss')}</Text>
-                </View>
+                {post.createdAt && (
+                    <View style={styles.postedAt}>
+                        <Text style={styles.postedAtText}>{format(post.createdAt.toDate(), 'dd/MM/yyyy HH:mm:ss')}</Text>
+                    </View>
+                )}
             </>
         )
     }
@@ -71,18 +54,17 @@ const HomeScreen = observer(() => {
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 { PostStore.feedPosts && PostStore.feedPosts.map((entity: any) => (
-                    <View style={{ width: '100%'}}>
-                        <Text>{entity.youtubeId}</Text>
+                    <View style={{ width: '100%'}} key={entity.youtubeId}>
                         <View style={styles.videoOwner}>
                             {renderUserOwner(entity)}
                         </View>
                         <YoutubePlayer
-                            height={300}
+                            height={240}
                             play={playing}
                             videoId={entity.youtubeId}
                             onChangeState={onStateChange}
                         />
-                        {/* <Button title={playing ? "pause" : "play"} onPress={togglePlaying} /> */}
+                        <LikeView postId={entity.id} />
                     </View>
                 ))}
             </KeyboardAwareScrollView>

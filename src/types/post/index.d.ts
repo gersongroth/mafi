@@ -2,6 +2,7 @@ export type PostType = 'youtube';
 
 export interface YoutubePost {
     url: string;
+    description: string;
 }
 
 interface FirebasePost extends Post {
