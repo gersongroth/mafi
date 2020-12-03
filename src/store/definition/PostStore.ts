@@ -21,7 +21,7 @@ class PostStore {
         this.postsRef
             .orderBy('createdAt', 'desc')
             .where('type', '==', 'youtube')
-            .limit(10)
+            .limit(100)
             .onSnapshot(
                 (querySnapshot: any) => {
                     const newEntities: any[] | ((prevState: never[]) => never[]) = []
@@ -110,6 +110,14 @@ class PostStore {
                 });
             });
         console.log('deslike');
+    }
+
+    recommended() {
+        return (this.feedPosts ||[]).slice().sort(() => Math.random() - Math.random()).slice(0, 10);
+    }
+
+    moreViewed() {
+        return (this.feedPosts ||[]).slice().sort(() => Math.random() - Math.random()).slice(0, 10);
     }
 }
 

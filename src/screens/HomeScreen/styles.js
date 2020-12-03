@@ -79,4 +79,16 @@ export default StyleSheet.create({
     numberOfLikes: {
         marginLeft: 10,
     },
+    recommendedCarousel: {
+        flex: 1,
+        flexDirection:'row',
+        justifyContent: 'center',
+        marginBottom: 20,
+    },
+    recommendedTitle: {
+        fontSize: 20,
+        // textAlign: 'center',
+        marginHorizontal: 10,
+        fontFamily: 'Robot',
+    }
 })

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Alert, Button, FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Alert, Button, Dimensions, FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from './styles';
 import { firebase } from '../../firebase/config'
 import { useStores } from '../../hooks/useStores';
@@ -10,6 +10,8 @@ import { observer } from 'mobx-react-lite';
 import { format } from 'date-fns';
 import useInit from '../../hooks/useInit';
 import LikeView from './LikeView';
+import Carousel from 'react-native-snap-carousel';
+import { scrollInterpolator, animatedStyles } from '../../utils/animations';
 
 export const anonymousUser = {
     fullName: 'Anônimo',
@@ -19,7 +21,7 @@ export const anonymousUser = {
 const HomeScreen = observer(() => {
     const { PostStore, ProfileStore } = useStores();
     const [playing, setPlaying] = useState(false);
-
+    const carouselRef = useRef<any>();
     useInit();
     const onStateChange = useCallback((state) => {
       if (state === "ended") {
@@ -48,11 +50,83 @@ const HomeScreen = observer(() => {
         )
     }
 
+    const renderItem = ({ item }: any) =>{
+        return (
+          <View style={{
+              backgroundColor:'floralwhite',
+              borderRadius: 5,
+              height: 150,
+              padding: 0,
+              marginLeft: 0,
+              marginRight: 0,
+            }}>
+                <YoutubePlayer
+                    height={150}
+                    play={playing}
+                    videoId={item.youtubeId}
+                    onChangeState={onStateChange}
+                />
+          </View>
+        )
+    }
+
+    const SLIDER_WIDTH = Dimensions.get('window').width;
+    const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+
+    const recommended = useMemo(() => {
+        return PostStore.recommended() || [];
+    }, []);
+
+    const moreViewed = useMemo(() => {
+        return PostStore.moreViewed() || [];
+    }, []);
+
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
+                {recommended.length > 0 && (
+                    <View>
+                        <Text style={styles.recommendedTitle}>Recomendados para você:</Text>
+                        <View style={styles.recommendedCarousel}>
+                            <Carousel
+                                layout={"default"}
+                                // layout={'stack'}
+                                ref={carouselRef}
+                                data={recommended}
+                                renderItem={renderItem}
+                                useScrollView={true}  
+                                sliderWidth={SLIDER_WIDTH}
+                                itemWidth={ITEM_WIDTH}
+                                scrollInterpolator={scrollInterpolator}
+                                slideInterpolatedStyle={animatedStyles}
+                                loop
+                            />
+                        </View>
+                    </View>
+                )}
+                {moreViewed.length > 0 && (
+                    <View>
+                        <Text style={styles.recommendedTitle}>Mais Acessados:</Text>
+                        <View style={styles.recommendedCarousel}>
+                            <Carousel
+                                layout={"default"}
+                                // layout={'stack'}
+                                ref={carouselRef}
+                                data={moreViewed}
+                                renderItem={renderItem}
+                                useScrollView={true}  
+                                sliderWidth={SLIDER_WIDTH}
+                                itemWidth={ITEM_WIDTH}
+                                scrollInterpolator={scrollInterpolator}
+                                slideInterpolatedStyle={animatedStyles}
+                                loop
+                            />
+                        </View>
+                    </View>
+                )}
+                
                 { PostStore.feedPosts && PostStore.feedPosts.map((entity: any) => (
                     <View style={{ width: '100%'}} key={entity.youtubeId}>
                         <View style={styles.videoOwner}>
