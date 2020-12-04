@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import styles from './styles';
 import { useStores } from '../../../hooks/useStores';
 import { apiEvents } from '../../../event/descriptor/ApiEvents';
+import FlashMessage, { showMessage } from "react-native-flash-message";
 
 const AddVideo = ({navigation}: any) => {
     const { PostStore } = useStores();
@@ -16,16 +17,26 @@ const AddVideo = ({navigation}: any) => {
                 setUrlYoutube('');
                 setDescription('');
                 Keyboard.dismiss();
+                showMessage({
+                    message: "Vídeo Adicionado com sucesso!",
+                    type: "success",
+                });
             }, true);
             PostStore.addYoutubeVideo({
                 url: urlYoutube,
                 description,
+            });
+        } else {
+            showMessage({
+                message: "Favor preencher corretamente todos os campos!",
+                type: "danger",
             });
         }
     }
 
     return (
         <View style={styles.container}>
+            <FlashMessage position="top" />
             <View
                 style={{ flex: 1, width: '100%' }}>
                 <Image

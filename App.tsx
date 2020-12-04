@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginScreen, HomeScreen, RegistrationScreen, VideoScreen } from './src/screens';
+import { LoginScreen, HomeScreen, RegistrationScreen, VideoScreen, ProfileScreen } from './src/screens';
 import {decode, encode} from 'base-64';
 import { firebase } from './src/firebase/config';
 import { LogBox, View, Text, Button } from 'react-native';
@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons,FontAwesome5 } from '@expo/vector-icons';
 import { useStores } from './src/hooks/useStores';
 // import { Observer } from 'mobx-react-lite';
+import FlashMessage from "react-native-flash-message";
 
 LogBox.ignoreLogs(['Setting a timer']);
 
@@ -70,6 +71,16 @@ function VideoStackScreen() {
   );
 }
 
+const ProfileStack = createStackNavigator();
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" options={{ title: 'Perfil' }} component={ProfileScreen} />
+    </ProfileStack.Navigator>
+  );
+}
+
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -107,7 +118,7 @@ export default function App() {
   return (
     // <Observer>
     //     {() => (
-           <>
+          <>
             {loading ? <></> : (
               <NavigationContainer>
                   { user ? (
@@ -123,6 +134,8 @@ export default function App() {
                             return <Ionicons name={iconName} size={size} color={color} />
                           } else if (route.name === 'Video') {
                             return <FontAwesome5 name="video" size={size} color={color} />
+                          } else if (route.name === 'Profile') {
+                            return <FontAwesome5 name="user" size={size} color={color} />
                           }
       
                           return <Ionicons name="ios-home" size={size} color={color} />
@@ -136,7 +149,8 @@ export default function App() {
                     >
                       <Tab.Screen name="Home" children={()=><HomeStackScreen user={user}/>} />
                       <Tab.Screen name="Video" component={VideoStackScreen} />
-                      <Tab.Screen name="Settings" component={SettingsStackScreen} />
+                      <Tab.Screen name="Profile" component={ProfileStackScreen} />
+                      {/* <Tab.Screen name="Settings" component={SettingsStackScreen} /> */}
                     </Tab.Navigator>
                   ) : (
                     <Stack.Navigator>

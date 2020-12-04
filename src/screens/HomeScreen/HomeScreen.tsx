@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Alert, Button, Dimensions, FlatList, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useCallback,  useMemo, useRef, useState } from 'react'
+import { Alert, Dimensions, Text,View } from 'react-native'
 import styles from './styles';
-import { firebase } from '../../firebase/config'
 import { useStores } from '../../hooks/useStores';
 import YoutubePlayer from "react-native-youtube-iframe";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';

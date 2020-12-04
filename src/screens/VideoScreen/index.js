@@ -5,12 +5,9 @@ import { firebase } from '../../firebase/config'
 import { useStores } from '../../hooks/useStores';
 import AddVideo from './AddVideo';
 import ViewVideo from './ViewVideo';
-import styles from './styles';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const VideoScreen = observer((props) => {
-    const { ProfileStore } = useStores();
-    const postsRef = firebase.firestore().collection('posts')
+const VideoScreen = () => {
     return (
         <KeyboardAwareScrollView
             style={{ flex: 1, width: '100%' }}
@@ -20,11 +17,11 @@ const VideoScreen = observer((props) => {
                 flexDirection: 'column',
             }}>
                 <AddVideo />
-                <ViewVideo />
+                {/* <ViewVideo /> */}
             </View>
 
         </KeyboardAwareScrollView>
     )
-});
+};
 
 export default VideoScreen;
