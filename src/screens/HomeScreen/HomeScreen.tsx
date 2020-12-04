@@ -12,6 +12,7 @@ import useInit from '../../hooks/useInit';
 import LikeView from './LikeView';
 import Carousel from 'react-native-snap-carousel';
 import { scrollInterpolator, animatedStyles } from '../../utils/animations';
+import { Searchbar } from 'react-native-paper';
 
 export const anonymousUser = {
     fullName: 'Anônimo',
@@ -19,9 +20,12 @@ export const anonymousUser = {
 };
 
 const HomeScreen = observer(() => {
-    const { PostStore, ProfileStore } = useStores();
+    const { PostStore } = useStores();
     const [playing, setPlaying] = useState(false);
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [useSearchResult, setUseSearchResult] = React.useState(false);
     const carouselRef = useRef<any>();
+
     useInit();
     const onStateChange = useCallback((state) => {
       if (state === "ended") {
@@ -81,53 +85,87 @@ const HomeScreen = observer(() => {
         return PostStore.moreViewed() || [];
     }, []);
 
+    const onChangeSearch = (query: string) => {
+        if (!query) {
+            setUseSearchResult(false);
+            PostStore.clearQueryPosts();
+        } else if (query.length >= 3) {
+            setUseSearchResult(true);
+            PostStore.findPosts(query);
+        }
+        setSearchQuery(query);
+    };
+
+    const posts = useMemo(() => {
+        if (useSearchResult) {
+            return PostStore.queryPosts;
+        }
+        return PostStore.feedPosts;
+    }, [PostStore.feedPosts, useSearchResult, PostStore.queryPosts]);
+
+    console.log(posts.length);
+
     return (
         <View style={styles.container}>
+            <View style={styles.searchBarContainer}>
+                <Searchbar
+                    value={searchQuery}
+                    onChangeText={onChangeSearch}
+                    placeholder="Buscar Vídeo"
+                    onSubmitEditing={() => PostStore.findPosts(searchQuery)}
+                    clearAccessibilityLabel="Limpar"
+                />
+            </View>
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
-                {recommended.length > 0 && (
-                    <View>
-                        <Text style={styles.recommendedTitle}>Recomendados para você:</Text>
-                        <View style={styles.recommendedCarousel}>
-                            <Carousel
-                                layout={"default"}
-                                // layout={'stack'}
-                                ref={carouselRef}
-                                data={recommended}
-                                renderItem={renderItem}
-                                useScrollView={true}  
-                                sliderWidth={SLIDER_WIDTH}
-                                itemWidth={ITEM_WIDTH}
-                                scrollInterpolator={scrollInterpolator}
-                                slideInterpolatedStyle={animatedStyles}
-                                loop
-                            />
-                        </View>
-                    </View>
-                )}
-                {moreViewed.length > 0 && (
-                    <View>
-                        <Text style={styles.recommendedTitle}>Mais Acessados:</Text>
-                        <View style={styles.recommendedCarousel}>
-                            <Carousel
-                                layout={"default"}
-                                // layout={'stack'}
-                                ref={carouselRef}
-                                data={moreViewed}
-                                renderItem={renderItem}
-                                useScrollView={true}  
-                                sliderWidth={SLIDER_WIDTH}
-                                itemWidth={ITEM_WIDTH}
-                                scrollInterpolator={scrollInterpolator}
-                                slideInterpolatedStyle={animatedStyles}
-                                loop
-                            />
-                        </View>
-                    </View>
+                {!useSearchResult && (
+                    <>
+                        {recommended.length > 0 && (
+                            <View>
+                                <Text style={styles.recommendedTitle}>Recomendados para você:</Text>
+                                <View style={styles.recommendedCarousel}>
+                                    <Carousel
+                                        layout={"default"}
+                                        // layout={'stack'}
+                                        ref={carouselRef}
+                                        data={recommended}
+                                        renderItem={renderItem}
+                                        useScrollView={true}  
+                                        sliderWidth={SLIDER_WIDTH}
+                                        itemWidth={ITEM_WIDTH}
+                                        scrollInterpolator={scrollInterpolator}
+                                        slideInterpolatedStyle={animatedStyles}
+                                        loop
+                                    />
+                                </View>
+                            </View>
+                        )}
+                        {moreViewed.length > 0 && (
+                            <View>
+                                <Text style={styles.recommendedTitle}>Mais Acessados:</Text>
+                                <View style={styles.recommendedCarousel}>
+                                    <Carousel
+                                        layout={"default"}
+                                        // layout={'stack'}
+                                        ref={carouselRef}
+                                        data={moreViewed}
+                                        renderItem={renderItem}
+                                        useScrollView={true}  
+                                        sliderWidth={SLIDER_WIDTH}
+                                        itemWidth={ITEM_WIDTH}
+                                        scrollInterpolator={scrollInterpolator}
+                                        slideInterpolatedStyle={animatedStyles}
+                                        loop
+                                    />
+                                </View>
+                            </View>
+                        )}
+                    </>
                 )}
                 
-                { PostStore.feedPosts && PostStore.feedPosts.map((entity: any) => (
+                
+                {posts && posts.map((entity: any) => (
                     <View style={{ width: '100%'}} key={entity.youtubeId}>
                         <View style={styles.videoOwner}>
                             {renderUserOwner(entity)}
@@ -141,6 +179,11 @@ const HomeScreen = observer(() => {
                         <LikeView postId={entity.id} />
                     </View>
                 ))}
+                {posts.length == 0 && (
+                    <Text style={{
+                        textAlign: 'center',
+                    }}>Nenhum vídeo encontrado :(</Text>
+                )}
             </KeyboardAwareScrollView>
         </View>
     )

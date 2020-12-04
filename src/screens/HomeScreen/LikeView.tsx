@@ -51,7 +51,7 @@ const LikeView = observer(({ postId }: any) => {
             .then((querySnapshot: any) => {
                 setLiked(querySnapshot.size > 0);
             });
-    }, []);
+    }, [ProfileStore.user]);
 
     useEffect(() => {
         if (!ProfileStore.user) {

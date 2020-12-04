@@ -10,18 +10,20 @@ class PostStore {
 
     feedPosts: any = [];
     userPosts: any = [];
+    queryPosts: any = [];
+    allPosts: any = [];
 
     constructor() {
         makeAutoObservable(this);
 
-        this.loadFeedPosts();
+        this.loadAllPosts();
+
     }
 
-    loadFeedPosts() {
+    loadAllPosts() {
         this.postsRef
             .orderBy('createdAt', 'desc')
             .where('type', '==', 'youtube')
-            .limit(100)
             .onSnapshot(
                 (querySnapshot: any) => {
                     const newEntities: any[] | ((prevState: never[]) => never[]) = []
@@ -30,7 +32,8 @@ class PostStore {
                         entity.id = doc.id
                         newEntities.push(entity)
                     });
-                    this.feedPosts = newEntities;
+                    this.allPosts = newEntities;
+                    this.feedPosts = newEntities.slice(0, 100);
                 },
                 (error: any) => {
                     console.log(error)
@@ -59,6 +62,17 @@ class PostStore {
                     console.log(error)
                 }
             )
+    }
+
+    findPosts(query: string) {
+        const lowerCaseQuery = query.toLowerCase();
+        console.log(query);
+        this.queryPosts = this.allPosts.filter((post: any) => (post.description || '').toLowerCase().includes(lowerCaseQuery));
+        console.log(this.queryPosts.length);
+    }
+
+    clearQueryPosts() {
+        this.queryPosts = [];
     }
 
     setUserPosts(posts: any[]) {

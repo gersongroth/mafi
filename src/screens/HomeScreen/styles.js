@@ -89,6 +89,10 @@ export default StyleSheet.create({
         fontSize: 20,
         // textAlign: 'center',
         marginHorizontal: 10,
-        fontFamily: 'Robot',
+        // fontFamily: 'Robot',
+    },
+    searchBarContainer: {
+        width: '100%',
+        marginBottom: 20,
     }
 })
