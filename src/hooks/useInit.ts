@@ -9,9 +9,10 @@ const useInit = () => {
         reaction(
             () => ProfileStore.user,
             () => {
-                console.log('useraaaaaaa', ProfileStore.user);
                 if (ProfileStore.user) {
                     PostStore.loadUserPosts(ProfileStore.user?.id);
+                    console.log('useInit', ProfileStore.user?.id);
+                    ProfileStore.loadAllLikes();
                 }
             }
         );

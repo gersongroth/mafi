@@ -64,11 +64,13 @@ class PostStore {
             )
     }
 
+    findPostById(postId: string) {
+        return this.allPosts.find((post: any) => post.id === postId);
+    }
+
     findPosts(query: string) {
         const lowerCaseQuery = query.toLowerCase();
-        console.log(query);
         this.queryPosts = this.allPosts.filter((post: any) => (post.description || '').toLowerCase().includes(lowerCaseQuery));
-        console.log(this.queryPosts.length);
     }
 
     clearQueryPosts() {
@@ -123,7 +125,6 @@ class PostStore {
                     doc.ref.delete()
                 });
             });
-        console.log('deslike');
     }
 
     recommended() {

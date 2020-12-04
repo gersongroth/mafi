@@ -9,7 +9,7 @@ export default StyleSheet.create({
         marginVertical: 20,
     },
     authorAvatar: {
-        width: 100,
-        height: 100,
+        width: 150,
+        height: 150,
     },
 })

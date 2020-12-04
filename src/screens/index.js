@@ -3,3 +3,4 @@ export { default as HomeScreen } from './HomeScreen/HomeScreen';
 export { default as RegistrationScreen } from './RegistrationScreen/RegistrationScreen';
 export { default as VideoScreen } from './VideoScreen';
 export { default as ProfileScreen } from './ProfileScreen';
+export { default as FavoritesScreen } from './FavoritesScreen';

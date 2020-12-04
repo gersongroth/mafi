@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { LoginScreen, HomeScreen, RegistrationScreen, VideoScreen, ProfileScreen } from './src/screens';
+import { LoginScreen, HomeScreen, RegistrationScreen, VideoScreen, ProfileScreen, FavoritesScreen } from './src/screens';
 import {decode, encode} from 'base-64';
 import { firebase } from './src/firebase/config';
 import { LogBox, View, Text, Button } from 'react-native';
@@ -80,6 +80,14 @@ function ProfileStackScreen() {
   );
 }
 
+const FavoritesStack = createStackNavigator();
+function FavoritesStackScreen() {
+  return (
+    <FavoritesStack.Navigator>
+      <FavoritesStack.Screen name="Favorites" options={{ title: 'Favoritos' }} component={FavoritesScreen} />
+    </FavoritesStack.Navigator>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 
@@ -92,14 +100,12 @@ export default function App() {
     const usersRef = firebase.firestore().collection('users');
 
     firebase.auth().onAuthStateChanged((user: { uid: any; }) => {
-      console.log(user);
       if (user) {
         usersRef
           .doc(user.uid)
           .get()
           .then((document: { data: () => any; }) => {
             const userData = document.data()
-            console.log(userData);
             setUser(userData)
 
             ProfileStore.setUser(userData);
@@ -136,6 +142,8 @@ export default function App() {
                             return <FontAwesome5 name="video" size={size} color={color} />
                           } else if (route.name === 'Profile') {
                             return <FontAwesome5 name="user" size={size} color={color} />
+                          }  else if (route.name === 'Favorites') {
+                            return <FontAwesome5 name="star" size={size} color={color} />
                           }
       
                           return <Ionicons name="ios-home" size={size} color={color} />
@@ -150,6 +158,7 @@ export default function App() {
                       <Tab.Screen name="Home" children={()=><HomeStackScreen user={user}/>} />
                       <Tab.Screen name="Video" component={VideoStackScreen} />
                       <Tab.Screen name="Profile" component={ProfileStackScreen} />
+                      <Tab.Screen name="Favorites" component={FavoritesStackScreen} />
                       {/* <Tab.Screen name="Settings" component={SettingsStackScreen} /> */}
                     </Tab.Navigator>
                   ) : (

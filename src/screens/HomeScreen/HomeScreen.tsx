@@ -102,8 +102,6 @@ const HomeScreen = observer(() => {
         return PostStore.feedPosts;
     }, [PostStore.feedPosts, useSearchResult, PostStore.queryPosts]);
 
-    console.log(posts.length);
-
     return (
         <View style={styles.container}>
             <View style={styles.searchBarContainer}>

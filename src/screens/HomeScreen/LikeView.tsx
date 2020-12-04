@@ -27,6 +27,7 @@ const LikeView = observer(({ postId }: any) => {
             return;
         }
         PostStore.like(postId, ProfileStore.user.id);
+        ProfileStore.like(postId);
         setLiked(true);
     }
 
@@ -36,6 +37,7 @@ const LikeView = observer(({ postId }: any) => {
             return;
         }
         PostStore.removeLike(postId, ProfileStore.user.id);
+        ProfileStore.removeLike(postId);
         setLiked(false);
     }
 
