@@ -36,6 +36,20 @@ const FavoritesScreen = observer(() => {
                 flexDirection: 'column',
             }}>
                 {ProfileStore.allLikes.map(renderVideo)}
+                {ProfileStore.allLikes.length === 0 && (
+                    <View style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        margin: 'auto'
+                    }}>
+                        <Text style={{
+                            alignSelf: 'center',
+                            fontSize: 20,
+                            textAlign: 'center',
+                            marginTop: '50%'
+                        }}>Você ainda não curtiu nenhum vídeo :(</Text>
+                    </View>
+                )}
             </View>
 
         </KeyboardAwareScrollView>
